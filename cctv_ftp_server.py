@@ -1,20 +1,34 @@
 # Простой FTP-сервер
 # Для сбора файлов с камер видеонаблюдения
 # https://pyftpdlib.readthedocs.io/en/latest/tutorial.html
-import os
+from os import listdir
 from threading import Thread
-import yaml
+
 import requests
+import yaml
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer
-from os import listdir
 
-user_list = [
-    file for file in listdir('config/') if file.endswith(".yml") and file != "config.yml"
-]
-with open('config/config.yml') as f:
-    config = yaml.safe_load(f)
+config_dir = 'config/'
+users_dir = config_dir + 'users/'
+with open(config_dir + 'config.yml') as file:
+    config = yaml.safe_load(file)
+
+user_list = {}
+for file in listdir(users_dir):
+    if file.endswith(".yml") and file != "config.yml":
+        with open(users_dir + file) as user_file:
+            user_list[file.rsplit('.', 1)[0]] = yaml.safe_load(user_file)
+if len(user_list) == 0:
+    print('no users found')
+    exit(-1)
+
+authorizer = DummyAuthorizer()
+print(f'found users({len(user_list)}):')
+for user in user_list.values():
+    print(user['name'], user['root'])
+    authorizer.add_user(user['name'], user['password'], user['root'], perm='elradfmwMT')
 
 
 def send_photo(username, filename):
@@ -27,7 +41,8 @@ def send_photo(username, filename):
         'caption': caption
     }
     with open(filename, 'rb') as photo_file:
-        requests.post('https://api.telegram.org/' + token + '/sendPhoto', params=params, files=dict(photo=photo_file))
+        requests.post('https://api.telegram.org/' + config['telegram_bot_token'] + '/sendPhoto', params=params,
+                      files=dict(photo=photo_file))
 
 
 class MyFtpHandler(FTPHandler):
@@ -58,25 +73,14 @@ class MyFtpHandler(FTPHandler):
         print(f'on_incomplete_file_received {self.remote_ip} {file}')
 
 
-def main():
-    authorizer = DummyAuthorizer()
-    authorizer.add_user('reolink1', '++++', './ftproot', perm='elradfmwMT')
+handler = MyFtpHandler
+handler.authorizer = authorizer
 
-    handler = MyFtpHandler
-    handler.authorizer = authorizer
+if 'external_ip' in config:
+    handler.masquerade_address = config['external_ip']
+    start_port, end_port = list(map(int, config['external_port_range'].split(',')))
+    handler.passive_ports = range(start_port, end_port)
 
-    # Specify a masquerade address and the range of ports to use for
-    # passive connections.  Decomment in case you're behind a NAT.
-    handler.masquerade_address = '46.229.188.134'
-    handler.passive_ports = range(21022, 21121)
-
-    # Instantiate FTP server class and listen on 0.0.0.0:21
-    address = ('0.0.0.0', 21021)
-    server = FTPServer(address, handler)
-
-    # start ftp server
-    server.serve_forever()
-
-
-if __name__ == '__main__':
-    main()
+address = (config['address'], config['port'])
+server = FTPServer(address, handler)
+server.serve_forever()
