@@ -1,0 +1,4 @@
+external_ip: 2.2.2.2
+external_port_range: 21021,21121
+telegram_bot_token: bot111111111:AAAAAAAAAAAAAAAAAAAAAAAAA
+telegram_chat_id: -1111111111
