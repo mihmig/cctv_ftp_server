@@ -64,7 +64,7 @@ class MyFtpHandler(FTPHandler):
 
     def on_file_received(self, file):
         print(f'on_file_received {self.remote_ip} {file}')
-        Thread(target=send_photo, args=(self.username, file,)).start()
+        #Thread(target=send_photo, args=(self.username, file,)).start()
 
     def on_incomplete_file_sent(self, file):
         print(f'on_incomplete_file_sent {self.remote_ip} {file}')
