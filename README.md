@@ -9,7 +9,7 @@
 * rename config.yml.sample to config.yml and edit it
 * add user config files (see user.yml.sample) 
 
-### run & test
+### run
 * python3 cctv_ftp_server.py
 
 ### install as service
@@ -36,6 +36,7 @@
 * systemctl daemon-reload
 * systemctl enable cctv-ftp-server
 * systemctl start cctv-ftp-server
+* systemctl status cctv-ftp-server
 * journalctl -u cctv-ftp-server -f -n 50
 
 ## TODO
