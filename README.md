@@ -8,6 +8,10 @@
 * pip install -r requirements.txt
 * rename config.yml.sample to config.yml and edit it
 * add user config files (see user.yml.sample) 
+* create venv
+``` bash
+python3 -m venv /data/projects/cctv_ftp_server/
+```
 
 ### run
 * python3 cctv_ftp_server.py

@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 PIDFile=/var/lib/cctv-ftp-server.pid
 WorkingDirectory=/projects/cctv_ftp_server/
-User=www-data
-Group=www-data
+User=ftpuser
+Group=ftpgroup
 Environment=PYTHONPATH=/projects/cctv_ftp_server/
 OOMScoreAdjust=-100
 ExecStart=/usr/bin/python3 cctv_ftp_server.py
