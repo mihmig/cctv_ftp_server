@@ -1,0 +1,18 @@
+[Unit]
+Description=cctv-ftp-server
+After=syslog.target
+After=network.target
+[Service]
+Type=simple
+PIDFile=/var/lib/cctv-ftp-server.pid
+WorkingDirectory=/data/projects/cctv_ftp_server/
+User=ftpuser
+Group=ftpgroup
+Environment=PYTHONPATH=/data/projects/cctv_ftp_server
+Environment=VIRTUAL_ENV=/data/projects/cctv_ftp_server/venv
+ExecStart=/data/projects/cctv_ftp_server/venv/bin/python3 /data/projects/cctv_ftp_server/cctv_ftp_server.py
+OOMScoreAdjust=-100
+TimeoutSec=300
+Restart=always
+[Install]
+WantedBy=multi-user.target
