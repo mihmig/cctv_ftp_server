@@ -3,6 +3,7 @@ __pycache__/
 config/*.yml
 config/users/*.yml
 ftproot/*
+!ftproot/.placeholder
 bin/
 lib/
 lib64/

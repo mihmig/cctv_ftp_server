@@ -1,0 +1,19 @@
+services:
+  cctv:
+    build: .  # Указываем, что образ собирается из текущей директории (где Dockerfile)
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - "21021:21021"
+    container_name: cctv
+    volumes:
+      - ./config:/app/config:ro
+      - ./ftproot:/ftproot
+    privileged: true
+    networks:
+      - cctv
+    restart: unless-stopped
+
+networks:
+  cctv:
+    driver: bridge
