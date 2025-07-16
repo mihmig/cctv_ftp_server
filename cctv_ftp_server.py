@@ -77,7 +77,7 @@ handler = MyFtpHandler
 handler.authorizer = authorizer
 
 if 'external_ip' in config:
-    handler.masquerade_address = config['external_ip']
+    # handler.masquerade_address = config['external_ip']
     start_port, end_port = list(map(int, config['external_port_range'].split(',')))
     handler.passive_ports = range(start_port, end_port)
 
