@@ -78,6 +78,11 @@ handler.authorizer = authorizer
 
 if 'external_ip' in config:
     # handler.masquerade_address = config['external_ip']
+    # Пример сопоставления: внутренний IP -> внешний IP
+    # handler.masquerade_address_map = {
+    #     "192.168.1.100": "203.0.113.10",  # Внутренний -> внешний
+    #     "10.0.0.5": "198.51.100.5"
+    # }
     start_port, end_port = list(map(int, config['external_port_range'].split(',')))
     handler.passive_ports = range(start_port, end_port)
 
