@@ -1,12 +1,36 @@
-# Синхронизация папки на FTP и локальной папки (с докачкой после обрыва соединения)
+# Синхронизация папки на FTP и локальной папки (с автоматической докачкой после обрыва соединения)
 import os
 import reconnecting_ftp
 
+hostname="127.0.0.1"
+port=21021
+user="user"
+password="12345"
+# Скачиваем файл, повторяя попытки
+# def download_file_with_exceptions(client, file_name):
+
+# Скачиваем файл
+def download_file(client, file_name):
+
+    if os.path.exists(file_name):
+        file_size = os.path.getsize(file_name)
+        if file_size == element[1].get('size'):
+            print(f'Файл {file_name} уже полностью загружен, пропускаем.')
+            return
+        else:
+            print(f'Файл {file_name} уже существует, возобновляем загрузку...')
+            client.retrbinary('RETR ' + file_name, open(file_name, 'a').write, rest=5000000)
+            return
+    print(f'Файла {file_name} нет, скачиваем:')
+    client.retrbinary('RETR ' + file_name, open(file_name, 'wb').write)
+
+
+print(f'Подключаемся к серверу {hostname}:{port}, пользователь {user}')
 client = reconnecting_ftp.Client(
-    hostname="127.0.0.1",
-    port=21021,
-    user="user",
-    password="12345",
+    hostname=hostname,
+    port=port,
+    user=user,
+    password=password,
     max_reconnects= 1000,
     timeout= 60)
 print('Получаем список файлов на сервере:')
@@ -26,7 +50,7 @@ for element in elements_list:
             continue
         else:
             print(f'Файл {file_name} уже существует, докачиваем...')
-            client.retrbinary('RETR ' + name, open(name, 'wb').write, rest=5000000)
+            client.retrbinary('RETR ' + file_name, open(file_name, 'wb').write, rest=5000000)
         print(f'Файла {file_name} нет, скачиваем:')
         client.retrbinary('RETR ' + file_name, open(file_name, 'wb').write)
 
