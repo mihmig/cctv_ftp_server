@@ -42,6 +42,7 @@ python3 -m venv /data/projects/cctv_ftp_server/
 * systemctl start cctv-ftp-server
 * systemctl status cctv-ftp-server
 * journalctl -u cctv-ftp-server -f -n 50
+* iptables -I INPUT -i enp1s0 -p tcp --match multiport --dports 21021:21030 -j ACCEPT
 
 ## TODO
 * upload to parent FTP server (with unlimited quota, repeat attempts, and custom bandwidh)
