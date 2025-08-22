@@ -75,16 +75,9 @@ class MyFtpHandler(FTPHandler):
 
 handler = MyFtpHandler
 handler.authorizer = authorizer
-
-if 'external_ip' in config:
-    # handler.masquerade_address = config['external_ip']
-    # Пример сопоставления: внутренний IP -> внешний IP
-    handler.masquerade_address_map = {
-         "192.168.1.18": "192.168.1.18",
-         "176.16.10.18": "185.221.152.19"
-    }
-    start_port, end_port = list(map(int, config['external_port_range'].split(',')))
-    handler.passive_ports = range(start_port, end_port)
+handler.masquerade_address_map = config.get('masquerade_address_map', {})
+start_port, end_port = list(map(int, config['external_port_range'].split(',')))
+handler.passive_ports = range(start_port, end_port)
 
 address = (config['address'], config['port'])
 server = FTPServer(address, handler)
