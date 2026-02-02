@@ -5,13 +5,17 @@
 * Send alert via telegram
 
 ### install
+
+* apt install python3-full 
+* mkdir -p /opt/cctv_ftp_server
+* cd /opt/cctv_ftp_server
+* python3 -m venv .venv
+* source ./.venv/bin/activate
 * pip install -r requirements.txt
 * rename config.yml.sample to config.yml and edit it
-* add user config files (see user.yml.sample) 
-* create venv
-``` bash
-python3 -m venv /data/projects/cctv_ftp_server/
-```
+* add user config files (see user.yml.sample)
+* add user for run service
+* adduser --system --no-create-home --group ftpuser
 
 ### run
 * python3 cctv_ftp_server.py
@@ -26,12 +30,12 @@ python3 -m venv /data/projects/cctv_ftp_server/
     [Service]
     Type=simple
     PIDFile=/var/run/cctv-ftp-server.pid
-    WorkingDirectory=/projects/cctv_ftp_server/
-    User=www-data
-    Group=www-data
-    Environment=PYTHONPATH=/projects/cctv_ftp_server/
+    WorkingDirectory=/opt/cctv_ftp_server/
+    User=ftpuser
+    Group=ftpuser
+    Environment=PYTHONPATH=/opt/cctv_ftp_server/
     OOMScoreAdjust=-100
-    ExecStart=/usr/bin/python cctv_ftp_server.py
+    ExecStart=/usr/bin/python3 cctv_ftp_server.py
     TimeoutSec=300
     Restart=always
     [Install]

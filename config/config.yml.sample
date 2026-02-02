@@ -1,6 +1,11 @@
 address: 0.0.0.0
-port: 21
+port: 21021
 external_ip: 2.2.2.2
 external_port_range: 21021,21121
 telegram_bot_token: bot111111111:AAAAAAAAAAAAAAAAAAAAAAAAA
 telegram_chat_id: -1111111111
+masquerade_address_map:
+  "192.168.1.101": "192.168.1.101"
+  "192.168.1.100": "88.88.88.88"
+  "192.168.0.101": "192.168.0.100"
+  "192.168.0.100": "77.77.77.77"
