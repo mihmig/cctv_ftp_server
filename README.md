@@ -22,25 +22,26 @@
 
 ### install as service
 * nano /etc/systemd/system/cctv-ftp-server.service
-  ``` ini
-  [Unit]
-    Description=cctv-ftp-server
-    After=syslog.target
-    After=network.target
-    [Service]
-    Type=simple
-    PIDFile=/var/run/cctv-ftp-server.pid
-    WorkingDirectory=/opt/cctv_ftp_server/
-    User=ftpuser
-    Group=ftpuser
-    Environment=PYTHONPATH=/opt/cctv_ftp_server/
-    OOMScoreAdjust=-100
-    ExecStart=/usr/bin/python3 cctv_ftp_server.py
-    TimeoutSec=300
-    Restart=always
-    [Install]
-    WantedBy=multi-user.target
-  ```
+``` ini
+[Unit]
+Description=cctv-ftp-server
+After=syslog.target
+After=network.target
+[Service]
+Type=simple
+PIDFile=/run/cctv-ftp-server.pid
+WorkingDirectory=/opt/cctv_ftp_server/
+User=ftpuser
+Group=ftpuser
+Environment=PYTHONPATH=/opt/cctv_ftp_server/
+Environment=VIRTUAL_ENV=/opt/cctv_ftp_server/.venv
+OOMScoreAdjust=-100
+ExecStart=/opt/cctv_ftp_server/.venv/bin/python3 cctv_ftp_server.py
+TimeoutSec=300
+Restart=always
+[Install]
+WantedBy=multi-user.target
+```
 * systemctl daemon-reload
 * systemctl enable cctv-ftp-server
 * systemctl start cctv-ftp-server
