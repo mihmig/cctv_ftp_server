@@ -7,7 +7,7 @@ Type=simple
 PIDFile=/var/lib/cctv-ftp-server.pid
 WorkingDirectory=/opt/cctv_ftp_server/
 User=ftpuser
-Group=ftpgroup
+Group=ftpuser
 Environment=PYTHONPATH=/opt/cctv_ftp_server
 Environment=VIRTUAL_ENV=/opt/.venv
 ExecStart=/opt/cctv_ftp_server/venv/bin/python3 /data/projects/cctv_ftp_server/cctv_ftp_server.py
