@@ -9,6 +9,8 @@ import yaml
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer
+import pyftpdlib.filesystems
+import pyftpdlib.__main__
 
 config_dir = 'config/'
 users_dir = config_dir + 'users/'
@@ -78,6 +80,9 @@ handler.authorizer = authorizer
 handler.masquerade_address_map = config.get('masquerade_address_map', {})
 start_port, end_port = list(map(int, config['external_port_range'].split(',')))
 handler.passive_ports = range(start_port, end_port)
+
+
+pyftpdlib.filesystems.AbstractedFS.validpath = lambda self, path: True
 
 address = (config['address'], config['port'])
 server = FTPServer(address, handler)

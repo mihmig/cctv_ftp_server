@@ -1,19 +1,14 @@
 services:
   cctv:
-    build: .  # Указываем, что образ собирается из текущей директории (где Dockerfile)
+    build: .
     environment:
       - TZ=Europe/Moscow
-    ports:
-      - "21021:21021"
     container_name: cctv
     volumes:
-      - ./config:/app/config:ro
-      - ./ftproot:/ftproot
-    privileged: true
-    networks:
-      - cctv
+      - ./config/config.yml:/app/config/config.yml:ro
+      - /opt/azimuth/azimuth-group.yml:/app/config/users/azimuth-group.yml
+      - /opt/azimuth/html:/azimuth/html
+      - /opt/azimuth/backup:/azimuth/backup
+      - ./cctv_ftp_server.py:/app/cctv_ftp_server.py:ro
+    network_mode: host
     restart: unless-stopped
-
-networks:
-  cctv:
-    driver: bridge
